@@ -1,5 +1,4 @@
 from sympy import *
-import numpy as np
 x = symbols('x')
 init_printing(use_unicode=True)
 
@@ -11,7 +10,7 @@ def halfDivisionMethodFn(func, seg):
     result = 1
     i = 0;
     while round(result, 4) != 0.0:
-        arr.append([arr[0], arr[1]])
+        # arr.append([arr[0], arr[1]])
         d = (arr[0] + arr[1]) / 2
         result = func(d)
         print('k', i)
@@ -25,7 +24,7 @@ def halfDivisionMethodFn(func, seg):
         else:
             arr[1] = d
         i = i + 1
-    print('result', round(result, 4))
+    print('result', round(d, 4))
     print()
 
 
@@ -94,16 +93,24 @@ def startFuncFirstPart(x):
 seg1 = [0, 1]
 seg2 = [-1.5, -1]
 
+print('Методом повторного ділення \n')
 halfDivisionMethodFn(startFunc, seg2)
 print('==================================================== \n')
+print('Методом Ньютона \n')
 newtonMethodFn(funcSign, startFunc, seg2)
 print('==================================================== \n')
+print('Методом простої ітерації \n')
 simpleIterationMethodFn(startFuncFirstPart, seg2)
 
 print()
+print('#=================================================# \n')
+print()
 
+print('Методом повторного ділення \n')
 halfDivisionMethodFn(startFunc, seg1)
 print('==================================================== \n')
+print('Методом Ньютона \n')
 newtonMethodFn(funcSign, startFunc, seg1)
 print('==================================================== \n')
+print('Методом простої ітерації \n')
 simpleIterationMethodFn(startFuncFirstPart, seg1)
