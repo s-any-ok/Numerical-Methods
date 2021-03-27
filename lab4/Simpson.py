@@ -2,7 +2,7 @@ def f(x):
     return (x**2)/(x**4 + 256)
 
 
-def simpson(a, b, h):
+def simpson(f, a, b, h):
     firstItem = 0
     secondItem = 0
     n = round((b - a) / (2 * h))
@@ -14,5 +14,5 @@ def simpson(a, b, h):
     result = (h / 3) * (f(a) + (4 * firstItem) + (2 * secondItem) + f(b))
     print('Simpson method result: ', result)
 
-simpson(0, 2, 0.5)
-simpson(0, 2, 0.25)
+simpson(f, 0, 2, 0.5)
+simpson(f, 0, 2, 0.25)

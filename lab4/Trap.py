@@ -7,7 +7,7 @@ def trapezoidal(f, a, b, n):
     for i in range(1, n):
         func += f(a + i*h)
     result = h*0.5*(f(a) + f(b) + 2*func)
-    return print('Rectangular method result: ', result)
+    print('Rectangular method result: ', result)
 
 a = 0
 b = 2
