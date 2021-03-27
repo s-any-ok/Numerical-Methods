@@ -1,5 +1,3 @@
-import numpy
-import copy
 import numpy.linalg
 from math import sqrt
 import numpy as np
