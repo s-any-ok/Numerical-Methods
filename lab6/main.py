@@ -10,6 +10,12 @@ Array1 = [
     [-7., -2., 2., -2., 0.],
     [2., -4., -4., 4., -12.]]
 
+Array1_2 = [
+    [-5., -1., -3., -1.],
+    [-2., 0., 8., -4.],
+    [-7., -2., 2., -2.],
+    [2., -4., -4., 4.]]
+
 Array2 = np.array([
     [18, -9, 0, 0, 0],
     [2, -9, -4, 0, 0],
@@ -18,52 +24,69 @@ Array2 = np.array([
     [0, 0, 0, 7, 12]])
 result2 = np.array([-81, 71, -39, 64, 3])
 
-a = np.array([2, -9, -4, 7])
-b = np.array([18, -9, 21, -10, 12])
-c = np.array([-9, -4, -8, 5])
-d = np.array([-81, 71, -39, 64, 3])
+Array2_2 = np.array([
+    [8, -2, 0, 0],
+    [-1, 6, -2, 0],
+    [0, 2, 10, -4],
+    [0, 0, -1, 6]])
 
-Array3 = np.array([
-    [21, -6, -9, -4],
-    [-6, 20, -4, 2],
-    [-2, -7, -20, 3],
-    [4, 9, 6, 24]])
-result3 = np.array([127, -144, 236, -5])
-target = 0.01
+# a = [-1, 2, -1, 0]
+# b = [8, 6, 10, 6]
+# c = [-2, -2, -4, 0]
+# d = [6, 3, 8, 5]
 
-def MaxRow(m, col):
-    max_element = m[col][col]
-    max_row = col
-    for i in range(col + 1, len(m)):
-        print(m[i][col], max_element)
-        if abs(m[i][col]) > abs(max_element):
-            max_element = m[i][col]
-            max_row = i
-    if max_row != col:
-        m[col], m[max_row] = m[max_row], m[col]
+a = [2, -9, -4, 7, 0]
+b = [18, -9, 21, -10, 12]
+c = [-9, -4, -8, 5, 0]
+d = [-81, 71, -39, 64, 3]
 
+Array3 = [
+    [10, 1, 1],
+    [2, 10, 1],
+    [2, 2, 10]]
+result3 = [12, 13, 14]
+
+# Array3 = [
+#     [21, -6, -9, -4],
+#     [-6, 20, -4, 2],
+#     [-2, -7, -20, 3],
+#     [4, 9, 6, 24]]
+# result3 = [127, -144, 236, -5]
+e = 0.01
 
 def Gauss(m):
     n = len(m)
-
-    for k in range(n - 1):
-        MaxRow(m, k)
+    # прямий хід (результат - верхня трикутна матриця)
+    for k in range(n - 1):  # обираємо провідний рядок
+        m = MaxRowChange(m, k)  # рядок з найбільшим по модулю елементом на верх
         for i in range(k + 1, n):
-            div = m[i][k] / m[k][k]
-            m[i][-1] -= div * m[k][-1]
-            for j in range(k, n):
-                m[i][j] -= div * m[k][j]
+            div = m[i][k] / m[k][k]    # An1/A11
+            for j in range(k, n + 1):
+                m[i][j] -= div * m[k][j]  # m[k][j] - елемент провідного рядка
 
     if IsSingular(m):
         print("Визначник дорівнює нулю => система має безліч розв'язків")
         return
 
-    x = [0 for i in range(n)]
+    # зворотній хід
+    x = [0 for i in range(n)]  # [0, 0, 0, 0]
     for k in range(n - 1, -1, -1):
-        x[k] = (m[k][-1] - sum([m[k][j] * x[j] for j in range(k + 1, n)])) / m[k][k]
-
+        b = m[k][-1]
+        sumOfRowOnX = sum([m[k][j] * x[j] for j in range(k + 1, n)])
+        x[k] = (b - sumOfRowOnX) / m[k][k]
+        if abs(x[k] == 0.0): x[k] = 0.0
     return x
 
+def MaxRowChange(m, col):
+    max_element = m[col][col]
+    max_row = col
+    for i in range(col + 1, len(m)):
+        if abs(m[i][col]) > abs(max_element):
+            max_element = m[i][col]
+            max_row = i
+    if max_row != col:
+        m[col], m[max_row] = m[max_row], m[col]
+    return m
 
 def IsSingular(m):
     for i in range(len(m)):
@@ -71,57 +94,112 @@ def IsSingular(m):
             return True
     return False
 
-def Progon(a, b, c, d):
-    nf = len(d)
-    ac, bc, cc, dc = map(np.array, (a, b, c, d))
-    for it in range(1, nf):
-        mc = ac[it - 1] / bc[it - 1]
-        bc[it] = bc[it] - mc * cc[it - 1]
-        dc[it] = dc[it] - mc * dc[it - 1]
+def Determinant(m):
+    d = 0
+    for i in range(0, len(m)):
+        for j in range(0, len(m)):
+            if (i == j):
+                d += m[i][j]
+    return d
 
-    xc = bc
-    xc[-1] = dc[-1] / bc[-1]
+def GaussInverse(M):
+    n = len(M)
+    I = [] # створити одиничну матрицю
+    for i in range(n): # заповнити одиничну матрицю
+        L = []
+        for j in range(n):
+            if i == j: L.append(1)
+            else: L.append(0)
+        I.append(L)
 
-    for il in range(nf - 2, -1, -1):
-        xc[il] = (dc[il] - cc[il] * xc[il + 1]) / bc[il]
+    for i in range(n):
+        j = i
+        while M[j][i] == 0: # шукаємо перший рядок із ненульовим значенням
+            j += 1
+        # поміняти місцями рядок i та рядок j
+        M[i], M[j] = M[j], M[i]
+        I[i], I[j] = I[j], I[i]
+        const = M[i][i]
+        for j in range(n): # ділимо на const, щоб мати 1 по діагоналі
+            I[i][j] = I[i][j] / const
+            M[i][j] = M[i][j] / const
 
-    return xc
+        for j in range(i+1,n): # операція, щоб мати 0 в i-му стовпці всіх рядків нижче i-го
+            const = M[j][i]
+            for k in range(n):
+                I[j][k] -= const * I[i][k]
+                M[j][k] -= const * M[i][k]
+
+    # маємо матрицю верхнього трикутника в M з одиницями по діагоналі
+    for i in range(n):
+        for j in range(i):
+            const = M[j][i]
+            for k in range(n):
+                I[j][k] -= const * I[i][k]
+                M[j][k] -= const * M[i][k]
+    return I
+
+def Progonka(a,b,c,d):
+    M = len(d)
+    p = []
+    q = []
+    x = []
+    for i in range(M):
+        x.append(0)
+
+    p.append((-1)*c[0]/b[0])
+    q.append(d[0]/b[0])
+
+    for i in range(1, M):
+        p.append(((-1)*c[i]) / (b[i]+a[i-1]*p[i-1]))
+        q.append((d[i]-a[i-1]*q[i-1]) / (b[i]+a[i-1]*p[i-1]))
+
+    x[M-1] = q[M-1]
+    for i in reversed(range(M-1)):
+        x[i] = p[i]*x[i+1]+q[i]
+    print("P:", p)
+    print("Q:", q)
+    return x
 
 
-def Seidel(A, b, eps):
-    n = len(A)
+def Zeidel(M, b, e):
+    n = len(M)
     x = [.0 for i in range(n)]
     converge = False
     while not converge:
-        x_new = np.copy(x)
+        xNew = np.copy(x)
         for i in range(n):
-            s1 = sum(A[i][j] * x_new[j] for j in range(i))
-            s2 = sum(A[i][j] * x[j] for j in range(i + 1, n))
-            x_new[i] = (b[i] - s1 - s2) / A[i][i]
-        converge = sqrt(sum((x_new[i] - x[i]) ** 2 for i in range(n))) <= eps
-        x = x_new
+            sum1 = sum(M[i][j] * xNew[j] for j in range(i))
+            sum2 = sum(M[i][j] * x[j] for j in range(i + 1, n))
+            xNew[i] = (b[i] - sum1 - sum2) / M[i][i]
+        converge = abs(sum(xNew[i] - x[i] for i in range(n))) <= e
+        x = xNew
     return x
 
 
-def Iteration(Array,result,N=50,x=0):
-    if x == 0:
-        x = np.zeros(len(Array[0]))
-    D = np.diag(Array)
-    R = Array - np.diagflat(D)
-    x_new = np.zeros_like(D)
-    x = np.ones_like(D)
+def Iteration(M, results, tolerance):
+    diag = np.diag(M)
+    div = M - np.diagflat(diag)  # по діагоналі нулі
+    xNew = np.zeros_like(diag)
+    x = np.ones_like(diag)
 
-    while np.any(np.abs(x-x_new) > 1e-5*np.abs(x+x_new)):
-        x = x_new
-        x_new = (result - np.dot(R, x)) / D
+    while np.any(np.abs(x-xNew) > tolerance*np.abs(x+xNew)):
+        x = xNew
+        xNew = (results - np.dot(div, x)) / diag
     return x
+
+
 
 print("Гаус: ")
 print(Gauss(Array1))
-print("Прогон: ")
-print(Progon(a, b, c, d))
+print("Визначник матриці: ")
+print(Determinant(Array1))
+print("Обернена матриця: ")
+print(np.array(GaussInverse(Array1_2)))
+print("Метод Прогону: ")
+print(Progonka(a, b, c, d))
 print(np.linalg.solve(Array2, result2))
 print("Зейдель: ")
-print(Seidel(Array3, result3, target))
-print ("Итераций: ")
-print(Iteration(Array3, result3, N=33))
+print(Zeidel(Array3, result3, e))
+print ("Ітерацій: ")
+print(Iteration(Array3, result3, e))
