@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 
 xPoints = [0.1, 0.5, 0.9, 1.3, 1.7]
 yPoints = [-2.2026, -0.19315, 0.79464, 1.5624, 2.2306]
-h = 1
-x = 8
+h = 0.4
+x = 1.5
 
 def FindCoefs(xPoints, yPoints, h):
     n = len(xPoints)

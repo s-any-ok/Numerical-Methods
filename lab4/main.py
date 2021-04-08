@@ -30,10 +30,10 @@ def trapezoidal(f, a, b, n):
     return result
 
 
-def rungeRomberg(f, mF, a , b, n):
+def rungeRomberg(f, mF, a , b, n, k):
     h = mF(f, a, b, n)
     hHalf = mF(f, a, b, round(n / 2))
-    result = hHalf - ((hHalf - h) / 3)
+    result = hHalf - ((hHalf - h) / k)
     print('{0:10}  {1}\n'.format('Runge-Romberg method result:', result))
 
 def f(x):
@@ -47,17 +47,17 @@ n2 = 8
 print("a:", a, "\tb:", b, "\tn:", n1)
 print("------------------------------------")
 print('{0:28} {1}'.format('Rectangular method result:', rectangular(f, a, b, n1)))
-rungeRomberg(f, rectangular, a, b, n1)
+rungeRomberg(f, rectangular, a, b, n1, 1)
 print('{0:28}  {1}'.format('Simpson method result:', simpson(f, a, b, n1)))
-rungeRomberg(f, simpson, a, b, n1)
+rungeRomberg(f, simpson, a, b, n1, 15)
 print('{0:28}  {1}'.format('Trapezoidal method result:', trapezoidal(f, a, b, n1)))
-rungeRomberg(f, trapezoidal, a, b, n1)
+rungeRomberg(f, trapezoidal, a, b, n1, 3)
 
 print("a:", a, "\tb:", b, "\tn:", n2)
 print("------------------------------------")
 print('{0:28}  {1}'.format('Rectangular method result:', rectangular(f, a, b, n2)))
-rungeRomberg(f, rectangular, a, b, n2)
+rungeRomberg(f, rectangular, a, b, n2, 1)
 print('{0:28}  {1}'.format('Simpson method result:', simpson(f, a, b, n2)))
-rungeRomberg(f, simpson, a, b, n2)
+rungeRomberg(f, simpson, a, b, n2, 15)
 print('{0:28}  {1}'.format('Trapezoidal method result:', trapezoidal(f, a, b, n2)))
-rungeRomberg(f, trapezoidal, a, b, n2)
+rungeRomberg(f, trapezoidal, a, b, n2, 3)
